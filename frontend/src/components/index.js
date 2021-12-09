@@ -6,5 +6,4 @@ export { default as School } from "./School";
 export { default as Speaker } from "./Speaker";
 export { default as Dance } from "./Dance";
 export { default as ChristmasTree } from "./ChristmasTree";
-export { default as Audio } from "./Audio";
 export { default as NameForm } from "./NameForm";
