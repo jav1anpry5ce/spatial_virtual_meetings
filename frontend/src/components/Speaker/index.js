@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { useThree, useLoader } from "@react-three/fiber";
 import { useBox } from "@react-three/cannon";
 import SpeakerBox from "./SpeakerBox";
-import music from "../../asset/mix.mp3";
+import music from "../../asset/song.mp3";
 
 function Sound({ url, mute }) {
   const sound = useRef();

@@ -7,7 +7,7 @@ import { World, NameForm } from "./components";
 const socket = io("https://javaughnpryce.live:6060");
 
 function App() {
-  const [mute, setMute] = useState(true);
+  const [mute, setMute] = useState(false);
   const [microphone, setMicrophone] = useState(false);
   const [voiceData, setVoiceData] = useState();
   const [name, setName] = useState(localStorage.getItem("name"));
