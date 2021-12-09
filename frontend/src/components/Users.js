@@ -4,7 +4,7 @@ import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Box, Html } from "@react-three/drei";
 import { useBox } from "@react-three/cannon";
 
-function Sound({ audio, mute }) {
+function Sound({ audio }) {
   const sound = useRef();
   const { camera } = useThree();
   const [listener] = useState(() => new THREE.AudioListener());

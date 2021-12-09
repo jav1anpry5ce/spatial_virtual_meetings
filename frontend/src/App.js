@@ -5,7 +5,7 @@ import { BsMicMute, BsMic } from "react-icons/bs";
 import { GiSpeakerOff, GiSpeaker } from "react-icons/gi";
 import { World, NameForm } from "./components";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://javaughnpryce.live:6060");
 
 function App() {
   const [mute, setMute] = useState(true);

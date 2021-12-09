@@ -1,18 +1,17 @@
-const { createServer } = require("http");
+const { createServer } = require("https");
 const { Server } = require("socket.io");
 const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
 require("cors");
 const { instrument } = require("@socket.io/admin-ui");
-const colour = require("./RandomColour");
 
-// const server = createServer({
-//   key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-//   cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
-// });
+const server = createServer({
+  key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+  cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+});
 
-const server = createServer();
+// const server = createServer();
 const socketsStatus = [];
 
 const io = new Server(server, {
@@ -26,7 +25,7 @@ io.on("connection", (socket) => {
   const socketId = socket.id;
   const user = {
     id: socketId,
-    name: "",
+    name: null,
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     mute: false,
@@ -46,12 +45,10 @@ io.on("connection", (socket) => {
     user.mute = data.mute;
     user.name = data.name;
     user.colour = data.userColour;
-    io.emit("usersUpdate", socketsStatus);
   });
 
   socket.on("move", (pos) => {
     const user = socketsStatus.find((user) => user.id === socketId);
-    // user.position = pos;
     if (
       user.position.x !== pos.x ||
       user.position.y !== pos.y ||
@@ -63,7 +60,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("voice", (data) => {
-    // console.log(data.id);
     let newData = data.data.split(";");
     newData[0] = "data:audio/ogg;";
     newData = newData[0] + newData[1];

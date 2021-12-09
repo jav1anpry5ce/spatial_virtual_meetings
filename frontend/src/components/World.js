@@ -6,8 +6,6 @@ import {
   Html,
   useProgress,
   Stats,
-  AdaptiveDpr,
-  AdaptiveEvents,
 } from "@react-three/drei";
 import { Physics, usePlane } from "@react-three/cannon";
 import {
@@ -22,7 +20,15 @@ import {
 
 function Loader() {
   const { progress } = useProgress();
-  return <Html center>{progress} % loaded</Html>;
+  return (
+    <Html center className="bg-gray-700 h-screen w-screen">
+      <div className="flex items-center justify-center max-w-3xl mx-auto h-screen">
+        <h3 className="text-3xl font-semibold text-white">
+          {progress} % loaded
+        </h3>
+      </div>
+    </Html>
+  );
 }
 
 function Plane(props) {
@@ -146,8 +152,6 @@ export default function World({ socket, mute, microphone, voiceData }) {
         </Physics>
         <ambientLight intensity={0.6} />
         <PointerLockControls />
-        <AdaptiveDpr pixelated />
-        <AdaptiveEvents />
       </Canvas>
     </div>
   );
