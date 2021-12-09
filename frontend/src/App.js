@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import { io } from "socket.io-client";
 import { BsMicMute, BsMic } from "react-icons/bs";
 import { GiSpeakerOff, GiSpeaker } from "react-icons/gi";
