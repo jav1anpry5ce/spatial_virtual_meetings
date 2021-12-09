@@ -136,6 +136,7 @@ export default function World({ socket, mute, microphone, voiceData }) {
                         ? usersVoice.data
                         : null
                     }
+                    name={user.name}
                   />
                 );
               }

@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Box, Html } from "@react-three/drei";
 import { useBox } from "@react-three/cannon";
-import img from "../asset/img.jpg";
 
 function Sound({ audio, mute }) {
   const sound = useRef();
@@ -31,14 +30,14 @@ function Sound({ audio, mute }) {
   return <positionalAudio ref={sound} args={[listener]} />;
 }
 
-export default function Users({ position, rotation, colour, audio }) {
+export default function Users({ position, rotation, colour, audio, name }) {
   const [audioData, setAudioData] = useState();
   const [ref, api] = useBox(() => ({
     mass: 10,
     type: "Static",
     args: [1.6, 0.1, 0.1],
   }));
-  const texture = useLoader(THREE.TextureLoader, img);
+
   useFrame(() => {
     api.position.set(position.x, position.y, position.z);
     api.rotation.set(rotation[0], rotation[1], rotation[2]);
@@ -49,12 +48,13 @@ export default function Users({ position, rotation, colour, audio }) {
   return (
     <mesh ref={ref}>
       <Box args={[0.5, 2.3, 0.8]}>
-        <meshBasicMaterial attach="material" color={colour} map={texture} />
+        <meshBasicMaterial attach="material" color={colour} />
         <Html
-          className="text-white font-semibold text-xl"
-          position={[0, 2.5, -0.3]}
+          className="text-white font-semibold text-sm w-full font-mono tracking-widest text-center capitalize overflow-ellipsis break-normal"
+          center
+          position={[0, 1, 0]}
         >
-          Hey
+          {name}
         </Html>
       </Box>
       <Suspense fallback={null}>

@@ -1,4 +1,4 @@
-const { createServer } = require("https");
+const { createServer } = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
 const fs = require("fs");
@@ -7,12 +7,12 @@ require("cors");
 const { instrument } = require("@socket.io/admin-ui");
 const colour = require("./RandomColour");
 
-const server = createServer({
-  key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
-});
+// const server = createServer({
+//   key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+//   cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+// });
 
-// const server = createServer();
+const server = createServer();
 const socketsStatus = [];
 
 const io = new Server(server, {
@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     mute: false,
-    colour: colour(),
+    colour: "#fff",
   };
   socketsStatus.push(user);
 
@@ -44,6 +44,8 @@ io.on("connection", (socket) => {
   socket.on("usersData", (data) => {
     const user = socketsStatus.find((user) => user.id === socketId);
     user.mute = data.mute;
+    user.name = data.name;
+    user.colour = data.userColour;
     io.emit("usersUpdate", socketsStatus);
   });
 
