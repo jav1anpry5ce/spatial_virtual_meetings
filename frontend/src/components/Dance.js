@@ -12,7 +12,7 @@ export default function Model() {
     <group ref={group} dispose={null}>
       <group
         rotation={[Math.PI / 2, 0, 1.7]}
-        scale={[0.01, 0.01, 0.01]}
+        scale={[0.017, 0.017, 0.017]}
         position={[7, 0, 10]}
       >
         <primitive object={nodes.mixamorigHips} />

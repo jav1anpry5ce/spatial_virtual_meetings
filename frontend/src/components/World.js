@@ -85,7 +85,11 @@ export default function World({ socket, mute, microphone, voiceData }) {
         <Sky />
         <Physics gravity={[0, -35, 0]}>
           <User
-            position={[Math.random() * (5, 10) + 5, 1, Math.random() * (5, 10)]}
+            position={[
+              Math.random() * -1 + -67,
+              Math.random() * 2 + 1,
+              Math.random() * 27 + 26,
+            ]}
             socket={socket}
           />
 

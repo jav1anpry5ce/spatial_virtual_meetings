@@ -13,12 +13,16 @@ function Sound({ url, mute }) {
 
   useEffect(() => {
     sound.current.setBuffer(buffer);
-    sound.current.setRefDistance(0.08);
+    sound.current.setRefDistance(0.1);
     sound.current.setLoop(true);
     camera.add(listener);
     return () => camera.remove(listener);
     // eslint-disable-next-line
   }, []);
+
+  // useEffect(() => {
+  //   if (listener) listener.context.currentTime = 50;
+  // });
 
   useEffect(() => {
     mute ? sound.current.pause() : sound.current.play();

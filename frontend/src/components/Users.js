@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, Suspense } from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { Box, Html } from "@react-three/drei";
-import { useBox } from "@react-three/cannon";
+import { Html, Sphere } from "@react-three/drei";
+import { useSphere } from "@react-three/cannon";
 
 function Sound({ audio }) {
   const sound = useRef();
@@ -16,7 +16,7 @@ function Sound({ audio }) {
   }, [audio]);
 
   useEffect(() => {
-    sound.current.setRefDistance(1);
+    sound.current.setRefDistance(0.95);
     sound.current.setLoop(false);
     camera.add(listener);
     return () => camera.remove(listener);
@@ -24,7 +24,7 @@ function Sound({ audio }) {
   }, []);
 
   useEffect(() => {
-    sound.current.play();
+    if (!sound.current.isPlaying) sound.current.play();
   }, [audio]);
 
   return <positionalAudio ref={sound} args={[listener]} />;
@@ -32,10 +32,11 @@ function Sound({ audio }) {
 
 export default function Users({ position, rotation, colour, audio, name }) {
   const [audioData, setAudioData] = useState();
-  const [ref, api] = useBox(() => ({
+  const [ref, api] = useSphere(() => ({
     mass: 10,
     type: "Static",
-    args: [1.6, 0.1, 0.1],
+    args: [0, 0, 0],
+    scale: [0.5, 0.5, 0.5],
   }));
 
   useFrame(() => {
@@ -47,16 +48,16 @@ export default function Users({ position, rotation, colour, audio, name }) {
   }, [audio]);
   return (
     <mesh ref={ref}>
-      <Box args={[0.5, 2.3, 0.8]}>
+      <Sphere scale={[0.5, 0.5, 0.5]}>
         <meshBasicMaterial attach="material" color={colour} />
         <Html
           className="text-white font-semibold text-sm w-full font-mono tracking-widest text-center capitalize overflow-ellipsis break-normal"
           center
-          position={[0, 1, 0]}
+          position={[0, 1.2, -1]}
         >
           {name}
         </Html>
-      </Box>
+      </Sphere>
       <Suspense fallback={null}>
         <Sound audio={audioData} />
       </Suspense>

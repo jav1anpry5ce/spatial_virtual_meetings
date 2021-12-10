@@ -3,7 +3,7 @@ import { Form, Input, Button } from "antd";
 import { SketchPicker } from "react-color";
 
 export default function NameForm({ setName, setUserColour }) {
-  const [colour, setColour] = useState("#fff");
+  const [colour, setColour] = useState("#f5f5f5");
   const [userName, setUserName] = useState();
 
   const handleChange = (color) => {
@@ -24,7 +24,7 @@ export default function NameForm({ setName, setUserColour }) {
       style={{ backgroundColor: colour }}
     >
       <div className="flex items-center h-full">
-        <div className="bg-white w-full rounded-md shadow-lg max-w-xl px-4 py-4 my-4">
+        <div className="bg-white w-full rounded-md max-w-xl px-4 py-4 my-4 shadow-md shadow-gray-300">
           <h3 className="text-center text-2xl font-semibold text-gray-800">
             Welcome To Virtual Meeting Hangout!
           </h3>
@@ -66,7 +66,7 @@ export default function NameForm({ setName, setUserColour }) {
                   htmlType="submit"
                   appearance="primary"
                   style={{ border: "none" }}
-                  className="rounded-lg w-4/5 mt-2 h-12 bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+                  className="rounded-full w-4/5 mt-2 h-12 bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300 shadow-md shadow-gray-700"
                 >
                   Submit
                 </Button>

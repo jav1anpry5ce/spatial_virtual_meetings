@@ -22,6 +22,9 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
+  console.log(
+    `Connection from ${socket.request.socket._peername.address}:${socket.request.socket._peername.port}`
+  );
   const socketId = socket.id;
   const user = {
     id: socketId,
@@ -73,6 +76,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    console.log(
+      `${socket.request.socket._peername.address}:${socket.request.socket._peername.port} Disconnected`
+    );
     socket.broadcast.emit("userDisconnected", socketId);
     const index = socketsStatus.findIndex((user) => user.id === socketId);
     if (index !== -1) socketsStatus.splice(index, 1)[0];
