@@ -39,7 +39,7 @@ function Sound({
   }, [mute]);
 
   useEffect(() => {
-    (isAddressAll && !mute) || (userIsAddressAll && microphone)
+    (isAddressAll && !mute) || (userIsAddressAll && microphone && !mute)
       ? sound.current.setVolume(0.1)
       : mute
       ? sound.current.setVolume(0)
