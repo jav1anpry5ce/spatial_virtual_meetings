@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
 import { SketchPicker } from "react-color";
 
-export default function NameForm({ setName, setUserColour }) {
+export default function NameForm({ setName, setUserColour, setUserImage }) {
   const [colour, setColour] = useState("#f5f5f5");
   const [userName, setUserName] = useState();
+  // const [url, setUrl] = useState();
 
   const handleChange = (color) => {
     setColour(color.hex);
@@ -13,8 +14,10 @@ export default function NameForm({ setName, setUserColour }) {
 
   const handleSubmit = () => {
     setName(userName);
+    // setUserImage(url);
     localStorage.setItem("name", userName);
     localStorage.setItem("colour", colour);
+    // localStorage.setItem("image", url);
     window.location.reload();
   };
 
@@ -60,6 +63,21 @@ export default function NameForm({ setName, setUserColour }) {
                 onChange={handleChange}
               />
             </Form.Item>
+            {/* <Form.Item
+              name="image_url"
+              label="Image URL"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter an image url!",
+                },
+              ]}
+            >
+              <Input
+                onChange={(e) => setUrl(e.target.value)}
+                className="rounded-md"
+              />
+            </Form.Item> */}
             <Form.Item>
               <div className="text-center">
                 <Button

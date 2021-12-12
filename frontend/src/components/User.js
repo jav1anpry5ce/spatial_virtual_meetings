@@ -8,6 +8,10 @@ const keys = {
   KeyS: "backward",
   KeyA: "left",
   KeyD: "right",
+  ArrowUp: "forward",
+  ArrowDown: "backward",
+  ArrowLeft: "left",
+  ArrowRight: "right",
   Space: "jump",
 };
 
@@ -48,16 +52,19 @@ export default function User({ position, socket }) {
     type: "Dynamic",
     position,
     args: [1.5, 0, 0],
-    scale: [0.5, 0.5, 0.5],
+    scale: [0.4, 0.4, 0.4],
   }));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      socket.emit("move", ref.current.getWorldPosition(camera.position));
-    }, 100);
+      socket.emit("move", {
+        position: ref.current.getWorldPosition(camera.position),
+      });
+    }, 50);
     return () => clearInterval(interval);
     // eslint-disable-next-line
   }, []);
+
   const { forward, backward, left, right, jump } = usePlayerControls();
   const { camera } = useThree();
   const velocity = useRef([0, 0, 0]);
@@ -79,9 +86,10 @@ export default function User({ position, socket }) {
     if (jump && Math.abs(velocity.current[1].toFixed(2)) < 0.005)
       api.velocity.set(velocity.current[0], 8, velocity.current[2]);
   });
+
   return (
     <>
-      <mesh ref={ref} />
+      <mesh ref={ref} scale={[0.4, 0.4, 0.4]} />
     </>
   );
 }

@@ -8,3 +8,5 @@ export { default as Dance } from "./Dance";
 export { default as ChristmasTree } from "./ChristmasTree";
 export { default as NameForm } from "./NameForm";
 export { default as MobileScreen } from "./MobileScreen";
+export { default as Bar } from "./Bar";
+// export { default as GangDance } from "./GangDance";

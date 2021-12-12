@@ -7,7 +7,11 @@ export default function Model(props) {
   const { nodes, materials } = useGLTF("/Speaker.glb");
   return (
     <group ref={ref} {...props} dispose={null}>
-      <group position={[0, 0.07, 0]} rotation={[Math.PI / 2, 0, 1.5]}>
+      <group
+        position={[0.7, 0.6, 0]}
+        rotation={[Math.PI / 2, 0, 1.5]}
+        scale={[2, 2, 2]}
+      >
         <mesh
           castShadow
           receiveShadow
