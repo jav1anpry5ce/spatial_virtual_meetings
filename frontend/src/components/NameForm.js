@@ -2,22 +2,17 @@ import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
 import { SketchPicker } from "react-color";
 
-export default function NameForm({ setName, setUserColour, setUserImage }) {
+export default function NameForm() {
   const [colour, setColour] = useState("#f5f5f5");
   const [userName, setUserName] = useState();
-  // const [url, setUrl] = useState();
 
   const handleChange = (color) => {
     setColour(color.hex);
-    setUserColour(color.hex);
   };
 
   const handleSubmit = () => {
-    setName(userName);
-    // setUserImage(url);
     localStorage.setItem("name", userName);
     localStorage.setItem("colour", colour);
-    // localStorage.setItem("image", url);
     window.location.reload();
   };
 

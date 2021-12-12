@@ -88,7 +88,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (name && userColour) {
+    if (!mobile && name && userColour) {
       const data = {
         mute,
         name,
@@ -98,7 +98,7 @@ export default function App() {
       socket.emit("usersData", data);
     }
     // eslint-disable-next-line
-  }, [name, userColour]);
+  }, [mobile, name, userColour]);
 
   useEffect(() => {
     const data = {
@@ -109,7 +109,7 @@ export default function App() {
   }, [mute, microphone]);
 
   useEffect(() => {
-    audio(1000);
+    audio(500);
   }, []);
 
   useEffect(() => {

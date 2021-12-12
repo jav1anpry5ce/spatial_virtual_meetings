@@ -34,17 +34,6 @@ io.on("connection", (socket) => {
   if (socketsStatus.length === 0) {
     firstClient.id = socketId;
   }
-  const user = {
-    id: socketId,
-    name: null,
-    position: [0, 0, 0],
-    rotation: [0, 0, 0],
-    mute: false,
-    microphone: false,
-    colour: "#fff",
-    image: null,
-  };
-  socketsStatus.push(user);
 
   socket.emit("welcome", {
     id: socketId,
@@ -53,32 +42,45 @@ io.on("connection", (socket) => {
   });
 
   socket.on("usersData", (data) => {
-    const user = socketsStatus.find((user) => user.id === socketId);
-    user.mute = data.mute;
-    user.name = data.name;
-    user.colour = data.userColour;
-    user.microphone = data.microphone;
-    user.image = data.userImage;
+    const user = {
+      id: socketId,
+      name: data.name,
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      rotation: [0, 0, 0],
+      mute: data.mute,
+      microphone: data.microphone,
+      colour: data.userColour,
+    };
+    socketsStatus.push(user);
     socket.broadcast.emit("newUserConnected", { user: user });
   });
 
   socket.on("userDataUpdated", (data) => {
     const user = socketsStatus.find((user) => user.id === socketId);
-    user.mute = data.mute;
-    user.microphone = data.microphone;
-    socket.broadcast.emit("userPositions", socketsStatus);
+    if (user) {
+      user.mute = data.mute;
+      user.microphone = data.microphone;
+      socket.broadcast.emit("userPositions", socketsStatus);
+    }
   });
 
   socket.on("move", (data) => {
     const user = socketsStatus.find((user) => user.id === socketId);
-    if (
-      user.position.x !== data.position.x ||
-      user.position.y !== data.position.y ||
-      user.position.z !== data.position.z
-    ) {
-      user.position = data.position;
-      socket.broadcast.emit("userPositions", socketsStatus);
+    if (user) {
+      if (
+        user.position.x !== data.position.x ||
+        user.position.y !== data.position.y ||
+        user.position.z !== data.position.z
+      ) {
+        user.position = data.position;
+        socket.broadcast.emit("userPositions", socketsStatus);
+      }
     }
+
     if (
       data.position.x < -6 &&
       data.position.x > -27 &&
@@ -115,9 +117,11 @@ io.on("connection", (socket) => {
       `${socket.request.socket._peername.address}:${socket.request.socket._peername.port} Disconnected`
     );
     const user = socketsStatus.find((user) => user.id === socketId);
-    socket.broadcast.emit("userDisconnected", user);
-    const index = socketsStatus.findIndex((user) => user.id === socketId);
-    if (index !== -1) socketsStatus.splice(index, 1)[0];
+    if (user) {
+      socket.broadcast.emit("userDisconnected", user);
+      const index = socketsStatus.findIndex((user) => user.id === socketId);
+      if (index !== -1) socketsStatus.splice(index, 1)[0];
+    }
     if (socketId === firstClient.id) {
       if (socketsStatus.length > 0) firstClient.id = socketsStatus[0].id;
     }
