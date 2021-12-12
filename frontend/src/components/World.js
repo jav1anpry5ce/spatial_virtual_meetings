@@ -111,7 +111,7 @@ export default function World({
     <div className="h-full">
       <Canvas frameloop="demand" mode="concurrent">
         <Physics
-          gravity={[0, -55, 0]}
+          gravity={[0, -35, 0]}
           size={100}
           tolerance={0.001}
           iterations={5}
