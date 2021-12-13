@@ -23,8 +23,8 @@ export default function NameForm() {
     >
       <div className="flex items-center h-full">
         <div className="bg-white w-full rounded-md max-w-xl px-4 py-4 my-4 shadow-md shadow-gray-300">
-          <h3 className="text-center text-2xl font-semibold text-gray-800">
-            Welcome To Virtual Meeting Hangout!
+          <h3 className="text-center text-3xl font-semibold text-zinc-800">
+            Welcome To Virtual Hangout!
           </h3>
           <Form layout="vertical" onFinish={handleSubmit}>
             <Form.Item
