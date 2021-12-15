@@ -110,19 +110,7 @@ export default function World({
   return (
     <div className="h-full">
       <Canvas frameloop="demand" mode="concurrent">
-        <Physics
-          gravity={[0, -35, 0]}
-          size={100}
-          tolerance={0.001}
-          iterations={5}
-          broadphase={"Naive"}
-          step={1 / 60}
-          shouldInvalidate={true}
-          children
-          allowSleep={false}
-          axisIndex={0}
-          defaultContactMaterial={1e6}
-        >
+        <Physics gravity={[0, -35, 0]}>
           <Suspense fallback={<Loader />}>
             <Stats showPanel={0} />
             <Sky />

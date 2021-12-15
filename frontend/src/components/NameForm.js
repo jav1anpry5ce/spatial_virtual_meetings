@@ -89,10 +89,8 @@ export default function NameForm() {
         </div>
       </div>
       <div className="bg-gray-900 w-full max-h-16 h-full">
-        <div className="text-center py-1 space-y-2">
-          <h3 className="text-white font-semibold text-base">
-            DEVELOPED BY UCC IT CLUB
-          </h3>
+        <div className="text-center py-1 space-y-1">
+          <h3 className="text-white font-semibold text-base">Team Immersive</h3>
           <h3 className="text-white font-semibold text-base">&copy; 2021</h3>
         </div>
       </div>

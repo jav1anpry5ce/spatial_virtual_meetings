@@ -47,7 +47,7 @@ io.on("connection", (socket) => {
       name: data.name,
       position: {
         x: 0,
-        y: 0,
+        y: 2,
         z: 0,
       },
       rotation: [0, 0, 0],
@@ -116,18 +116,18 @@ io.on("connection", (socket) => {
     console.log(
       `${socket.request.socket._peername.address}:${socket.request.socket._peername.port} Disconnected`
     );
-    const user = socketsStatus.find((user) => user.id === socketId);
-    if (user) {
-      socket.broadcast.emit("userDisconnected", user);
-      const index = socketsStatus.findIndex((user) => user.id === socketId);
-      if (index !== -1) socketsStatus.splice(index, 1)[0];
-    }
     if (socketId === firstClient.id) {
       if (socketsStatus.length > 0) firstClient.id = socketsStatus[0].id;
     }
     if (socketsStatus.length < 1) {
       firstClient.id = null;
       firstClient.currentTime = 0;
+    }
+    const user = socketsStatus.find((user) => user.id === socketId);
+    if (user) {
+      socket.broadcast.emit("userDisconnected", user);
+      const index = socketsStatus.findIndex((user) => user.id === socketId);
+      if (index !== -1) socketsStatus.splice(index, 1)[0];
     }
   });
 });
