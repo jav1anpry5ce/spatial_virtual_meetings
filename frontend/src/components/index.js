@@ -9,4 +9,4 @@ export { default as ChristmasTree } from "./ChristmasTree";
 export { default as NameForm } from "./NameForm";
 export { default as MobileScreen } from "./MobileScreen";
 export { default as Bar } from "./Bar";
-// export { default as GangDance } from "./GangDance";
+export { default as Loading } from "./Loading";

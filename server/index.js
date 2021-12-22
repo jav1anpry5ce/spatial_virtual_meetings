@@ -46,9 +46,9 @@ io.on("connection", (socket) => {
       id: socketId,
       name: data.name,
       position: {
-        x: 0,
-        y: 2,
-        z: 0,
+        x: -67,
+        y: 1.5,
+        z: 26,
       },
       rotation: [0, 0, 0],
       mute: data.mute,
@@ -97,16 +97,16 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("voice", (data) => {
-    let newData = data.data.split(";");
+  socket.on("voice", (userVoice) => {
+    let newData = userVoice.data.split(";");
     newData[0] = "data:audio/ogg;";
     newData = newData[0] + newData[1];
     socketsStatus.map((user) => {
       if (!user.mute && user.id != socketId) {
         socket.broadcast.to(user.id).emit("send", {
-          id: data.id,
+          id: userVoice.id,
           data: newData,
-          isAddressAll: data.isAddressAll,
+          isAddressAll: userVoice.isAddressAll,
         });
       }
     });

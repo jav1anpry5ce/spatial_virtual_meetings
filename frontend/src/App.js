@@ -5,7 +5,10 @@ import { GiSpeakerOff, GiSpeaker } from "react-icons/gi";
 import { World, NameForm, MobileScreen } from "./components";
 import { ToastContainer, toast } from "react-toastify";
 
-const socket = io("https://javaughnpryce.live:6060");
+const socket = io("https://javaughnpryce.live:6060", {
+  autoConnect: false,
+  reconnection: true,
+});
 
 export default function App() {
   const [mute, setMute] = useState(false);
@@ -32,7 +35,7 @@ export default function App() {
   }, [mute, microphone]);
 
   const resize = () => {
-    if (window.innerHeight <= 600 || window.innerWidth <= 768) {
+    if (window.innerWidth <= 414) {
       setMobile(true);
     } else {
       setMobile(false);
@@ -41,7 +44,7 @@ export default function App() {
 
   useEffect(() => {
     window.addEventListener("resize", resize);
-    if (window.innerHeight <= 600 || window.innerWidth <= 768) {
+    if (window.innerWidth <= 414) {
       setMobile(true);
     } else {
       setMobile(false);
@@ -138,10 +141,11 @@ export default function App() {
       progress: undefined,
     });
 
-  if (name && userColour && !mobile)
+  if (name && userColour && !mobile) {
+    socket.connect();
     return (
-      <div className="flex flex-col justify-between h-screen bg-zinc-900">
-        <div className="bg-gray-900 h-full w-full">
+      <div className="flex flex-col justify-between h-screen bg-zinc-900 py-1">
+        <div className="bg-gray-900 h-full w-full" style={{ height: "100%" }}>
           <World
             socket={socket}
             mute={mute}
@@ -150,50 +154,52 @@ export default function App() {
             isAddressAll={isAddressAll}
           />
         </div>
-        <div className="flex justify-between items-end px-4 py-2 max-w-5xl mx-auto w-full">
-          <div className="flex justify-between items-center space-x-2">
-            {microphone ? (
-              <BsMic
-                onClick={() => setMicrophone(!microphone)}
-                className="text-3xl text-blue-500"
-              />
-            ) : (
-              <BsMicMute
-                onClick={() => setMicrophone(!microphone)}
-                className="text-3xl text-red-500"
-              />
-            )}
-            <span className="text-white font-medium text-base">
-              Z to mute/unmute
-            </span>
+        <div>
+          <div className="flex justify-between items-end px-4 py-2 max-w-5xl mx-auto w-full">
+            <div className="flex justify-between items-center space-x-2">
+              {microphone ? (
+                <BsMic
+                  onClick={() => setMicrophone(!microphone)}
+                  className="text-3xl text-blue-500"
+                />
+              ) : (
+                <BsMicMute
+                  onClick={() => setMicrophone(!microphone)}
+                  className="text-3xl text-red-500"
+                />
+              )}
+              <span className="text-white font-medium text-base">
+                Z to mute/unmute
+              </span>
+            </div>
+            <div className="flex justify-between items-center space-x-2">
+              {mute ? (
+                <GiSpeakerOff
+                  onClick={() => setMute(!mute)}
+                  className="text-4xl text-red-500"
+                />
+              ) : (
+                <GiSpeaker
+                  onClick={() => setMute(!mute)}
+                  className="text-4xl text-blue-500"
+                />
+              )}
+              <span className="text-white font-medium text-base">
+                M to mute/unmute
+              </span>
+            </div>
+            <div className="flex justify-between items-center space-x-3">
+              {isAddressAll ? (
+                <BsMegaphoneFill className="text-3xl text-blue-500" />
+              ) : (
+                <BsMegaphone className="text-3xl text-red-500" />
+              )}
+            </div>
           </div>
-          <div className="flex justify-between items-center space-x-2">
-            {mute ? (
-              <GiSpeakerOff
-                onClick={() => setMute(!mute)}
-                className="text-4xl text-red-500"
-              />
-            ) : (
-              <GiSpeaker
-                onClick={() => setMute(!mute)}
-                className="text-4xl text-blue-500"
-              />
-            )}
-            <span className="text-white font-medium text-base">
-              M to mute/unmute
-            </span>
-          </div>
-          <div className="flex justify-between items-center space-x-3">
-            {isAddressAll ? (
-              <BsMegaphoneFill className="text-3xl text-blue-500" />
-            ) : (
-              <BsMegaphone className="text-3xl text-red-500" />
-            )}
-          </div>
+          <h3 className="text-center text-white font-semibold text-base">
+            For best experience please use headphones
+          </h3>
         </div>
-        <h3 className="text-center text-white font-semibold text-base">
-          For best experience please use headphones
-        </h3>
         <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -207,11 +213,13 @@ export default function App() {
         />
       </div>
     );
-  if (mobile)
+  }
+  if (mobile) {
+    if (socket.connected) socket.disconnect();
     return (
       <div className="bg-slate-800 h-screen">
         <MobileScreen />
       </div>
     );
-  else return <NameForm setName={setName} setUserColour={setUserColour} />;
+  } else return <NameForm setName={setName} setUserColour={setUserColour} />;
 }

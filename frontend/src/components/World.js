@@ -1,12 +1,7 @@
 /* eslint-disable array-callback-return */
 import React, { useEffect, useState, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import {
-  PointerLockControls,
-  Html,
-  useProgress,
-  Stats,
-} from "@react-three/drei";
+import { PointerLockControls, Html, useProgress } from "@react-three/drei";
 import { Physics, usePlane } from "@react-three/cannon";
 import {
   User,
@@ -17,14 +12,17 @@ import {
   Dance,
   ChristmasTree,
   Bar,
-  // GangDance,
 } from "../components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 
 function Loader() {
   const { progress } = useProgress();
   return (
-    <Html center className="bg-slate-700 h-screen w-screen">
+    <Html
+      center
+      className="bg-slate-700 h-screen w-screen"
+      position={[-67, 0, 0]}
+    >
       <div className="flex items-center justify-center max-w-3xl mx-auto h-screen">
         <h3 className="text-3xl font-semibold text-white">
           <CircularProgressbar
@@ -37,7 +35,6 @@ function Loader() {
               textSize: "12px",
             })}
           />
-          {/* {Math.round(progress)} % loaded */}
         </h3>
       </div>
     </Html>
@@ -67,6 +64,7 @@ export default function World({
   const [users, setUsers] = useState([]);
   const [usersVoice, setUsersVoice] = useState();
   const [currentTime, setCurrentTime] = useState(0);
+
   useEffect(() => {
     socket.on("welcome", ({ id, users, currentTime }) => {
       setUserId(id);
@@ -111,44 +109,20 @@ export default function World({
     <div className="h-full">
       <Canvas frameloop="demand" mode="concurrent">
         <Physics gravity={[0, -35, 0]}>
+          <Plane />
+          <User
+            position={[
+              Math.random() * -1 + -67,
+              Math.random() * 2 + 1,
+              Math.random() * 27 + 26,
+            ]}
+            socket={socket}
+          />
           <Suspense fallback={<Loader />}>
-            <Stats showPanel={0} />
             <Sky />
-            <User
-              position={[
-                Math.random() * -1 + -67,
-                Math.random() * 2 + 1,
-                Math.random() * 27 + 26,
-              ]}
-              socket={socket}
-            />
             <Speaker
               mute={mute}
               position={[10, 0.5, 5]}
-              rotation={[0, 0, 0]}
-              socket={socket}
-              currentTime={currentTime}
-              isAddressAll={
-                usersVoice && usersVoice.isAddressAll ? true : false
-              }
-              userIsAddressAll={isAddressAll}
-              microphone={microphone}
-            />
-            <Speaker
-              mute={mute}
-              position={[10, 0.5, 15]}
-              rotation={[0, 0, 0]}
-              socket={socket}
-              currentTime={currentTime}
-              isAddressAll={
-                usersVoice && usersVoice.isAddressAll ? true : false
-              }
-              userIsAddressAll={isAddressAll}
-              microphone={microphone}
-            />
-            <Speaker
-              mute={mute}
-              position={[10, 0.5, 25]}
               rotation={[0, 0, 0]}
               socket={socket}
               currentTime={currentTime}
@@ -172,7 +146,7 @@ export default function World({
             />
             <Speaker
               mute={mute}
-              position={[-5, 0.5, 3.5]}
+              position={[-35, 0.5, 1.5]}
               rotation={[0, 1.5, 0]}
               socket={socket}
               currentTime={currentTime}
@@ -184,8 +158,8 @@ export default function World({
             />
             <Speaker
               mute={mute}
-              position={[-15, 0.5, 3.5]}
-              rotation={[0, 1.5, 0]}
+              position={[-45, 0.5, 36]}
+              rotation={[0, 4.7, 0]}
               socket={socket}
               currentTime={currentTime}
               isAddressAll={
@@ -194,33 +168,10 @@ export default function World({
               userIsAddressAll={isAddressAll}
               microphone={microphone}
             />
-            <Speaker
-              mute={mute}
-              position={[-25, 0.5, 3.5]}
-              rotation={[0, 1.5, 0]}
-              socket={socket}
-              currentTime={currentTime}
-              isAddressAll={
-                usersVoice && usersVoice.isAddressAll ? true : false
-              }
-              userIsAddressAll={isAddressAll}
-              microphone={microphone}
-            />
-            <Speaker
-              mute={mute}
-              position={[-35, 0.5, 3.5]}
-              rotation={[0, 1.5, 0]}
-              socket={socket}
-              currentTime={currentTime}
-              isAddressAll={
-                usersVoice && usersVoice.isAddressAll ? true : false
-              }
-              userIsAddressAll={isAddressAll}
-              microphone={microphone}
-            />
+
             <School />
+            <Bar />
             <Dance />
-            {/* <GangDance /> */}
             <ChristmasTree />
             {users.map((user, index) => {
               if (user.id !== userId) {
@@ -243,11 +194,9 @@ export default function World({
                 );
               }
             })}
-            <Bar />
-            <Plane />
           </Suspense>
         </Physics>
-        <ambientLight intensity={0.6} />
+        <ambientLight intensity={0.7} />
         <PointerLockControls />
       </Canvas>
     </div>

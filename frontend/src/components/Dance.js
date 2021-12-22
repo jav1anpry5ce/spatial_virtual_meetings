@@ -13,7 +13,7 @@ export default function Model() {
       <group
         rotation={[Math.PI / 2, 0, 1.7]}
         scale={[0.017, 0.017, 0.017]}
-        position={[7, 0, 10]}
+        position={[7, 0, 17]}
       >
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
