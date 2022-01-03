@@ -5,11 +5,6 @@ import { GiSpeakerOff, GiSpeaker } from "react-icons/gi";
 import { World, NameForm, MobileScreen } from "./components";
 import { ToastContainer, toast } from "react-toastify";
 
-const socket = io("https://javaughnpryce.live:6060", {
-  autoConnect: false,
-  reconnection: true,
-});
-
 export default function App() {
   const [mute, setMute] = useState(false);
   const [microphone, setMicrophone] = useState(false);
@@ -18,6 +13,15 @@ export default function App() {
   const [userColour, setUserColour] = useState(localStorage.getItem("colour"));
   const [mobile, setMobile] = useState(false);
   const [isAddressAll, setIsAddressAll] = useState(false);
+  const [socket, setSocket] = useState();
+
+  useEffect(() => {
+    const socket = io("https://javaughnpryce.live:6060", {
+      autoConnect: false,
+      reconnection: true,
+    });
+    setSocket(socket);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -98,37 +102,40 @@ export default function App() {
         userColour,
         microphone,
       };
-      socket.emit("usersData", data);
+      if (socket) socket.emit("usersData", data);
     }
     // eslint-disable-next-line
-  }, [mobile, name, userColour]);
+  }, [mobile, name, userColour, socket]);
 
   useEffect(() => {
     const data = {
       mute,
       microphone,
     };
-    socket.emit("userDataUpdated", data);
-  }, [mute, microphone]);
+    if (socket) socket.emit("userDataUpdated", data);
+  }, [mute, microphone, socket]);
 
   useEffect(() => {
     audio(500);
   }, []);
 
   useEffect(() => {
-    socket.on("megaphone", (data) => {
-      setIsAddressAll(data);
-    });
-  }, []);
+    if (socket)
+      socket.on("megaphone", (data) => {
+        setIsAddressAll(data);
+      });
+  }, [socket]);
 
   useEffect(() => {
-    socket.on("newUserConnected", (user) => {
-      notify(user.user.name, "has entered the space!");
-    });
-    socket.on("userDisconnected", (user) => {
-      notify(user.name, "has left the space!");
-    });
-  }, []);
+    if (socket) {
+      socket.on("newUserConnected", (user) => {
+        notify(user.user.name, "has entered the space!");
+      });
+      socket.on("userDisconnected", (user) => {
+        notify(user.name, "has left the space!");
+      });
+    }
+  }, [socket]);
 
   const notify = (name, message) =>
     toast(`${name} ${message}`, {
@@ -142,7 +149,7 @@ export default function App() {
     });
 
   if (name && userColour && !mobile) {
-    socket.connect();
+    if (socket) socket.connect();
     return (
       <div className="flex flex-col justify-between h-screen bg-zinc-900 py-1">
         <div className="bg-gray-900 h-full w-full" style={{ height: "100%" }}>
@@ -215,7 +222,7 @@ export default function App() {
     );
   }
   if (mobile) {
-    if (socket.connected) socket.disconnect();
+    if (socket && socket.connected) socket.disconnect();
     return (
       <div className="bg-slate-800 h-screen">
         <MobileScreen />

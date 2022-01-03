@@ -31,7 +31,7 @@ function Sound({
   }, []);
 
   if (sound.current) {
-    socket.emit("songTime", sound.current.context.currentTime);
+    if (socket) socket.emit("songTime", sound.current.context.currentTime);
   }
 
   useEffect(() => {

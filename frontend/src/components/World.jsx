@@ -12,7 +12,7 @@ import {
   Dance,
   ChristmasTree,
   Bar,
-} from "../components";
+} from "./index";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 
 function Loader() {
@@ -66,25 +66,27 @@ export default function World({
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
-    socket.on("welcome", ({ id, users, currentTime }) => {
-      setUserId(id);
-      setUsers(users);
-      setCurrentTime(currentTime);
-    });
-    socket.on("newUserConnected", ({ user }) => {
-      setUsers((users) => [...users, user]);
-    });
-    socket.on("userDisconnected", (data) => {
-      setUsers((users) => users.filter((user) => user.id !== data.id));
-    });
-    socket.on("userPositions", (data) => {
-      setUsers(data);
-    });
-    socket.on("send", (data) => {
-      setUsersVoice(data);
-    });
+    if (socket) {
+      socket.on("welcome", ({ id, users, currentTime }) => {
+        setUserId(id);
+        setUsers(users);
+        setCurrentTime(currentTime);
+      });
+      socket.on("newUserConnected", ({ user }) => {
+        setUsers((users) => [...users, user]);
+      });
+      socket.on("userDisconnected", (data) => {
+        setUsers((users) => users.filter((user) => user.id !== data.id));
+      });
+      socket.on("userPositions", (data) => {
+        setUsers(data);
+      });
+      socket.on("send", (data) => {
+        setUsersVoice(data);
+      });
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (microphone && voiceData) {
@@ -93,10 +95,10 @@ export default function World({
         data: voiceData,
         isAddressAll,
       };
-      socket.emit("voice", data);
+      if (socket) socket.emit("voice", data);
     }
     // eslint-disable-next-line
-  }, [voiceData, microphone, userId]);
+  }, [voiceData, microphone, userId, socket]);
 
   useEffect(() => {
     if (usersVoice) {

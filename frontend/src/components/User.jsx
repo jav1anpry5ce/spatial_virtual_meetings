@@ -57,10 +57,11 @@ export default function User({ position, socket }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      socket.emit("move", {
-        position: ref.current.getWorldPosition(camera.position),
-      });
-    }, 50);
+      if (socket)
+        socket.emit("move", {
+          position: ref.current.getWorldPosition(camera.position),
+        });
+    }, 1);
     return () => clearInterval(interval);
     // eslint-disable-next-line
   }, []);
