@@ -29,6 +29,7 @@ io.on("connection", (socket) => {
   console.log(
     `Connection from ${socket.request.socket._peername.address}:${socket.request.socket._peername.port}`
   );
+  io.emit("usersConnected", { connected: socketsStatus.length });
   const socketId = socket.id;
 
   if (socketsStatus.length === 0) {
@@ -56,7 +57,10 @@ io.on("connection", (socket) => {
       colour: data.userColour,
     };
     socketsStatus.push(user);
-    socket.broadcast.emit("newUserConnected", { user: user });
+    socket.broadcast.emit("newUserConnected", {
+      user: user,
+    });
+    io.emit("usersConnected", { connected: socketsStatus.length });
   });
 
   socket.on("userDataUpdated", (data) => {
@@ -129,6 +133,7 @@ io.on("connection", (socket) => {
       const index = socketsStatus.findIndex((user) => user.id === socketId);
       if (index !== -1) socketsStatus.splice(index, 1)[0];
     }
+    io.emit("usersConnected", { connected: socketsStatus.length });
   });
 });
 

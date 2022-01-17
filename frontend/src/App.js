@@ -4,6 +4,7 @@ import { BsMicMute, BsMic, BsMegaphoneFill, BsMegaphone } from "react-icons/bs";
 import { GiSpeakerOff, GiSpeaker } from "react-icons/gi";
 import { World, NameForm, MobileScreen } from "./components";
 import { ToastContainer, toast } from "react-toastify";
+import { SpinnerDotted } from "spinners-react";
 
 export default function App() {
   const [mute, setMute] = useState(false);
@@ -13,7 +14,9 @@ export default function App() {
   const [userColour, setUserColour] = useState(localStorage.getItem("colour"));
   const [mobile, setMobile] = useState(false);
   const [isAddressAll, setIsAddressAll] = useState(false);
-  const [socket, setSocket] = useState();
+  const [socket, setSocket] = useState(null);
+  const [reconnecting, setReconnecting] = useState(false);
+  const [usersConnected, setUsersConnected] = useState(0);
 
   useEffect(() => {
     const socket = io("https://javaughnpryce.live:6060", {
@@ -102,7 +105,12 @@ export default function App() {
         userColour,
         microphone,
       };
-      if (socket) socket.emit("usersData", data);
+      if (socket) {
+        socket.on("connect", () => {
+          setReconnecting(false);
+          socket.emit("usersData", data);
+        });
+      }
     }
     // eslint-disable-next-line
   }, [mobile, name, userColour, socket]);
@@ -120,13 +128,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (socket)
-      socket.on("megaphone", (data) => {
-        setIsAddressAll(data);
-      });
-  }, [socket]);
-
-  useEffect(() => {
     if (socket) {
       socket.on("newUserConnected", (user) => {
         notify(user.user.name, "has entered the space!");
@@ -134,7 +135,36 @@ export default function App() {
       socket.on("userDisconnected", (user) => {
         notify(user.name, "has left the space!");
       });
+      socket.on("usersConnected", (data) => {
+        setUsersConnected(data.connected);
+      });
+      socket.on("megaphone", (data) => {
+        setIsAddressAll(data);
+      });
+      socket.io.on("reconnect_attempt", () => {
+        if (!reconnecting) setReconnecting(true);
+        socket.disconnect();
+        // setUsersConnected(0);
+      });
+      socket.on("disconnect", (reason) => {
+        setUsersConnected(0);
+        console.log(reason);
+      });
     }
+    return () => {
+      if (socket) {
+        socket.off("newUserConnected");
+        socket.off("userDisconnected");
+        socket.off("usersConnected");
+        socket.off("megaphone");
+        socket.off("userPositions");
+        socket.off("send");
+        socket.off("userDisconnected");
+        socket.off("newUserConnected");
+        socket.off("welcome");
+      }
+    };
+    // eslint-disable-next-line
   }, [socket]);
 
   const notify = (name, message) =>
@@ -163,6 +193,26 @@ export default function App() {
         </div>
         <div>
           <div className="flex justify-between items-end px-4 py-2 max-w-5xl mx-auto w-full">
+            {reconnecting && (
+              <div className="fixed w-full h-full inset-0 flex items-center justify-center">
+                <div className="flex flex-col justify-center items-center w-40 h-32 -mt-14 bg-slate-900/95 rounded">
+                  <SpinnerDotted
+                    size={70}
+                    thickness={100}
+                    speed={75}
+                    color="#fbbf24"
+                  />
+                  <p className="text-sm font-semibold text-white">
+                    Connecting to server
+                  </p>
+                </div>
+              </div>
+            )}
+            <div className="fixed right-2 top-5 z-50">
+              <p className="text-white text-lg">
+                Users connected {usersConnected}
+              </p>
+            </div>
             <div className="flex justify-between items-center space-x-2">
               {microphone ? (
                 <BsMic

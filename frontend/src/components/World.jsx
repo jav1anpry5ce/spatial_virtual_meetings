@@ -85,6 +85,21 @@ export default function World({
         setUsersVoice(data);
       });
     }
+    if (socket && socket.disconnected) setUsers([]);
+    if (socket) {
+      socket.io.on("reconnect_attempt", () => {
+        setUsers([]);
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off("userPositions");
+        socket.off("send");
+        socket.off("userDisconnected");
+        socket.off("newUserConnected");
+        socket.off("welcome");
+      }
+    };
     // eslint-disable-next-line
   }, [socket]);
 
