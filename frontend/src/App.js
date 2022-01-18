@@ -24,6 +24,9 @@ export default function App() {
       reconnection: true,
     });
     setSocket(socket);
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -142,7 +145,7 @@ export default function App() {
         setIsAddressAll(data);
       });
       socket.io.on("reconnect_attempt", () => {
-        if (!reconnecting) setReconnecting(true);
+        setReconnecting(true);
         socket.disconnect();
         // setUsersConnected(0);
       });
