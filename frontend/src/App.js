@@ -9,6 +9,7 @@ import { SpinnerDotted } from "spinners-react";
 const socket = io("https://javaughnpryce.live:6060", {
   autoConnect: false,
   reconnection: true,
+  timeout: 3600000,
 });
 
 export default function App() {
