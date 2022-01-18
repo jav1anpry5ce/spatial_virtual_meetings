@@ -3,16 +3,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PointerLockControls, Html, useProgress } from "@react-three/drei";
 import { Physics, usePlane } from "@react-three/cannon";
-import {
-  User,
-  Sky,
-  Users,
-  School,
-  Speaker,
-  Dance,
-  ChristmasTree,
-  Bar,
-} from "./index";
+import { User, Sky, Users, School, Speaker, Dance, Bar } from "./index";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 
 function Loader() {
@@ -189,7 +180,6 @@ export default function World({
             <School />
             <Bar />
             <Dance />
-            <ChristmasTree />
             {users.map((user, index) => {
               if (user.id !== userId) {
                 return (
