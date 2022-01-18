@@ -6,6 +6,11 @@ import { World, NameForm, MobileScreen } from "./components";
 import { ToastContainer, toast } from "react-toastify";
 import { SpinnerDotted } from "spinners-react";
 
+const socket = io("http://localhost:5000", {
+  autoConnect: false,
+  reconnection: true,
+});
+
 export default function App() {
   const [mute, setMute] = useState(false);
   const [microphone, setMicrophone] = useState(false);
@@ -14,20 +19,8 @@ export default function App() {
   const [userColour, setUserColour] = useState(localStorage.getItem("colour"));
   const [mobile, setMobile] = useState(false);
   const [isAddressAll, setIsAddressAll] = useState(false);
-  const [socket, setSocket] = useState(null);
   const [reconnecting, setReconnecting] = useState(false);
   const [usersConnected, setUsersConnected] = useState(0);
-
-  useEffect(() => {
-    const socket = io("https://javaughnpryce.live:6060", {
-      autoConnect: false,
-      reconnection: true,
-    });
-    setSocket(socket);
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -108,6 +101,7 @@ export default function App() {
         userColour,
         microphone,
       };
+
       if (socket) {
         socket.on("connect", () => {
           setReconnecting(false);
@@ -116,7 +110,7 @@ export default function App() {
       }
     }
     // eslint-disable-next-line
-  }, [mobile, name, userColour, socket]);
+  }, [mobile, name, userColour]);
 
   useEffect(() => {
     const data = {
@@ -124,7 +118,7 @@ export default function App() {
       microphone,
     };
     if (socket) socket.emit("userDataUpdated", data);
-  }, [mute, microphone, socket]);
+  }, [mute, microphone]);
 
   useEffect(() => {
     audio(500);
@@ -147,11 +141,7 @@ export default function App() {
       socket.io.on("reconnect_attempt", () => {
         setReconnecting(true);
         socket.disconnect();
-        // setUsersConnected(0);
-      });
-      socket.on("disconnect", (reason) => {
         setUsersConnected(0);
-        console.log(reason);
       });
     }
     return () => {
@@ -160,15 +150,10 @@ export default function App() {
         socket.off("userDisconnected");
         socket.off("usersConnected");
         socket.off("megaphone");
-        socket.off("userPositions");
-        socket.off("send");
-        socket.off("userDisconnected");
-        socket.off("newUserConnected");
-        socket.off("welcome");
       }
     };
     // eslint-disable-next-line
-  }, [socket]);
+  }, []);
 
   const notify = (name, message) =>
     toast(`${name} ${message}`, {
@@ -182,7 +167,7 @@ export default function App() {
     });
 
   if (name && userColour && !mobile) {
-    if (socket) socket.connect();
+    socket.connect();
     return (
       <div className="flex flex-col justify-between h-screen bg-zinc-900 py-1">
         <div className="bg-gray-900 h-full w-full" style={{ height: "100%" }}>
