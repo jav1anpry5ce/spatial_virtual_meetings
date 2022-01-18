@@ -69,6 +69,35 @@ export default function Users({
       <Sphere>
         <meshBasicMaterial attach="material" color={colour} />
         <Html
+          as="div"
+          prepend={true}
+          distanceFactor={12}
+          position={[0, -0.31, 0]}
+          center
+          className="flex flex-col space-y-2 items-center w-[16rem] h-[14rem]"
+        >
+          <div className="flex items-center text-white">
+            {name}
+            <div>
+              {microphone ? (
+                <BsMic className="text-base text-white" />
+              ) : (
+                <BsMicMute className="text-base text-white" />
+              )}
+              {mute ? (
+                <GiSpeakerOff className="text-base text-white" />
+              ) : (
+                <GiSpeaker className="text-base text-white" />
+              )}
+            </div>
+          </div>
+          <img
+            src={image}
+            alt="pic"
+            className="w-[6rem] h-[6rem] aspect-square rounded-full object-cover object-center"
+          />
+        </Html>
+        {/* <Html
           className="text-white font-semibold text-xs font-mono tracking-widest capitalize overflow-ellipsis break-normal flex items-center"
           center
           position={[0, 1.2, -1]}
@@ -86,7 +115,7 @@ export default function Users({
               <GiSpeaker className="text-base text-white" />
             )}
           </div>
-        </Html>
+        </Html> */}
       </Sphere>
       <Suspense fallback={null}>
         <Sound audio={audioData} />

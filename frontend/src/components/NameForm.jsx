@@ -5,6 +5,7 @@ import { SketchPicker } from "react-color";
 export default function NameForm() {
   const [colour, setColour] = useState("#f5f5f5");
   const [userName, setUserName] = useState();
+  const [imageUrl, setImageUrl] = useState();
 
   const handleChange = (color) => {
     setColour(color.hex);
@@ -13,6 +14,7 @@ export default function NameForm() {
   const handleSubmit = () => {
     localStorage.setItem("name", userName);
     localStorage.setItem("colour", colour);
+    localStorage.setItem("imageUrl", imageUrl);
     window.location.reload();
   };
 
@@ -43,6 +45,22 @@ export default function NameForm() {
               />
             </Form.Item>
             <Form.Item
+              name="image_url"
+              label="Image URL"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    "Please enter your image url (copy an image link for any website i.e facebook that has your image)",
+                },
+              ]}
+            >
+              <Input
+                className="rounded-md"
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item
               name="color"
               label="Pick Your Favourite Colour"
               rules={[
@@ -58,21 +76,6 @@ export default function NameForm() {
                 onChange={handleChange}
               />
             </Form.Item>
-            {/* <Form.Item
-              name="image_url"
-              label="Image URL"
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter an image url!",
-                },
-              ]}
-            >
-              <Input
-                onChange={(e) => setUrl(e.target.value)}
-                className="rounded-md"
-              />
-            </Form.Item> */}
             <Form.Item>
               <div className="text-center">
                 <Button

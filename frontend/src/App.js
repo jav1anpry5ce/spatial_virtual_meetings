@@ -6,7 +6,7 @@ import { World, NameForm, MobileScreen } from "./components";
 import { ToastContainer, toast } from "react-toastify";
 import { SpinnerDotted } from "spinners-react";
 
-const socket = io("https://javaughnpryce.live:6060", {
+const socket = io("http://localhost:5000", {
   autoConnect: false,
   reconnection: true,
   timeout: 3600000,
@@ -17,6 +17,7 @@ export default function App() {
   const [microphone, setMicrophone] = useState(false);
   const [voiceData, setVoiceData] = useState();
   const [name, setName] = useState(localStorage.getItem("name"));
+  const [imageUrl, setImageUrl] = useState(localStorage.getItem("imageUrl"));
   const [userColour, setUserColour] = useState(localStorage.getItem("colour"));
   const [mobile, setMobile] = useState(false);
   const [isAddressAll, setIsAddressAll] = useState(false);
@@ -95,10 +96,11 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!mobile && name && userColour) {
+    if (!mobile && name && imageUrl && userColour) {
       const data = {
         mute,
         name,
+        imageUrl,
         userColour,
         microphone,
       };
@@ -111,7 +113,7 @@ export default function App() {
       }
     }
     // eslint-disable-next-line
-  }, [mobile, name, userColour]);
+  }, [mobile, name, imageUrl, userColour]);
 
   useEffect(() => {
     const data = {
@@ -167,11 +169,11 @@ export default function App() {
       progress: undefined,
     });
 
-  if (name && userColour && !mobile) {
+  if (name && userColour && imageUrl && !mobile) {
     socket.connect();
     return (
-      <div className="flex flex-col justify-between h-screen bg-zinc-900 py-1">
-        <div className="bg-gray-900 h-full w-full" style={{ height: "100%" }}>
+      <div className="flex flex-col justify-between min-h-screen h-screen bg-zinc-900 py-1">
+        <div className="bg-gray-900 flex-1 w-full">
           <World
             socket={socket}
             mute={mute}
@@ -267,5 +269,12 @@ export default function App() {
         <MobileScreen />
       </div>
     );
-  } else return <NameForm setName={setName} setUserColour={setUserColour} />;
+  } else
+    return (
+      <NameForm
+        setName={setName}
+        setUserColour={setUserColour}
+        setImageUrl={setImageUrl}
+      />
+    );
 }

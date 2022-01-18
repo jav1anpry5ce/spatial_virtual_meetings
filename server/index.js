@@ -55,6 +55,7 @@ io.on("connection", (socket) => {
       mute: data.mute,
       microphone: data.microphone,
       colour: data.userColour,
+      image: data.imageUrl,
     };
     socketsStatus.push(user);
     socket.broadcast.emit("newUserConnected", {

@@ -7,14 +7,14 @@ import { User, Sky, Users, School, Speaker, Dance, Bar } from "./index";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 
 function Loader() {
-  const { progress } = useProgress();
+  const { progress, item } = useProgress();
   return (
     <Html
       center
       className="bg-slate-700 h-screen w-screen"
       position={[-67, 0, 0]}
     >
-      <div className="flex items-center justify-center max-w-3xl mx-auto h-screen">
+      <div className="flex flex-col items-center justify-center max-w-3xl mx-auto h-screen space-y-8">
         <h3 className="text-3xl font-semibold text-white">
           <CircularProgressbar
             value={progress}
@@ -27,6 +27,9 @@ function Loader() {
             })}
           />
         </h3>
+        <p className="text-white text-lg font-semibold font-mono">
+          Now loading "{item}"
+        </p>
       </div>
     </Html>
   );
@@ -180,18 +183,16 @@ export default function World({
             <School />
             <Bar />
             <Dance />
-            {users.map((user, index) => {
+            {users.map((user) => {
               if (user.id !== userId) {
                 return (
                   <Users
-                    key={index}
+                    key={user.id}
                     position={user.position}
                     rotation={user.rotation}
                     colour={user.colour}
                     audio={
-                      usersVoice && usersVoice.id === user.id
-                        ? usersVoice.data
-                        : null
+                      usersVoice && usersVoice.id === user.id && usersVoice.data
                     }
                     name={user.name}
                     microphone={user.microphone}
