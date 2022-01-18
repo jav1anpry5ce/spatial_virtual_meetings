@@ -42,10 +42,6 @@ export default function Users({
   mute,
   image,
 }) {
-  // const [img, setImg] = useState(
-  //   "https://thumbs.dreamstime.com/b/cosmos-beauty-deep-space-elements-image-furnished-nasa-science-fiction-art-102581846.jpg"
-  // );
-  // const texture = useLoader(THREE.TextureLoader, img);
   const [audioData, setAudioData] = useState();
   const [ref, api] = useSphere(() => ({
     mass: 10,
@@ -53,14 +49,10 @@ export default function Users({
     args: [0, 0, 0],
     scale: [0.4, 0.4, 0.4],
   }));
-
   useFrame(() => {
     api.position.set(position.x, position.y, position.z);
     api.rotation.set(rotation[0], rotation[1], rotation[2]);
   });
-  // useEffect(() => {
-  //   if (image) setImg(image);
-  // }, [image]);
   useEffect(() => {
     setAudioData(audio);
   }, [audio]);
@@ -97,25 +89,6 @@ export default function Users({
             className="w-[6rem] h-[6rem] aspect-square rounded-full object-cover object-center"
           />
         </Html>
-        {/* <Html
-          className="text-white font-semibold text-xs font-mono tracking-widest capitalize overflow-ellipsis break-normal flex items-center"
-          center
-          position={[0, 1.2, -1]}
-        >
-          {name}
-          <div>
-            {microphone ? (
-              <BsMic className="text-base text-white" />
-            ) : (
-              <BsMicMute className="text-base text-white" />
-            )}
-            {mute ? (
-              <GiSpeakerOff className="text-base text-white" />
-            ) : (
-              <GiSpeaker className="text-base text-white" />
-            )}
-          </div>
-        </Html> */}
       </Sphere>
       <Suspense fallback={null}>
         <Sound audio={audioData} />

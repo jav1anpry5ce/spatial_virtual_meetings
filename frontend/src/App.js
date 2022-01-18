@@ -124,7 +124,7 @@ export default function App() {
   }, [mute, microphone]);
 
   useEffect(() => {
-    audio(500);
+    audio(1000);
   }, []);
 
   useEffect(() => {

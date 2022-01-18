@@ -108,7 +108,7 @@ io.on("connection", (socket) => {
     newData = newData[0] + newData[1];
     socketsStatus.map((user) => {
       if (!user.mute && user.id != socketId) {
-        socket.broadcast.to(user.id).emit("send", {
+        socket.to(user.id).emit("send", {
           id: userVoice.id,
           data: newData,
           isAddressAll: userVoice.isAddressAll,
