@@ -5,6 +5,7 @@ import { useBox } from "@react-three/cannon";
 export default function Model(props) {
   const [ref] = useBox(() => ({}));
   const { nodes, materials } = useGLTF("/Speaker.glb");
+
   return (
     <group ref={ref} {...props} dispose={null}>
       <group

@@ -24,6 +24,7 @@ export default function App() {
   const [isAddressAll, setIsAddressAll] = useState(false);
   const [reconnecting, setReconnecting] = useState(false);
   const [usersConnected, setUsersConnected] = useState(0);
+  const [schoolRef, setSchoolRef] = useState();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -183,6 +184,8 @@ export default function App() {
             microphone={microphone}
             voiceData={voiceData}
             isAddressAll={isAddressAll}
+            schoolRef={schoolRef}
+            setSchoolRef={setSchoolRef}
           />
         </div>
         <div>

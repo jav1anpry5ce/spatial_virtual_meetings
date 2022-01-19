@@ -53,6 +53,8 @@ export default function World({
   microphone,
   voiceData,
   isAddressAll,
+  schoolRef,
+  setSchoolRef,
 }) {
   const [userId, setUserId] = useState();
   const [users, setUsers] = useState([]);
@@ -179,7 +181,7 @@ export default function World({
               microphone={microphone}
             />
 
-            <School />
+            <School setSchoolRef={setSchoolRef} />
             <Bar />
             <Dance />
             {users.map((user, index) => {
@@ -197,6 +199,7 @@ export default function World({
                     microphone={user.microphone}
                     mute={user.mute}
                     image={user.image}
+                    schoolRef={schoolRef}
                   />
                 );
               }

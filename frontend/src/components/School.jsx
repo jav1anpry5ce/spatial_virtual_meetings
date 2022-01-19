@@ -1,8 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 
 export default function Model(props) {
   const group = useRef();
+  const { setSchoolRef } = props;
+  useEffect(() => {
+    setSchoolRef(group);
+    // eslint-disable-next-line
+  }, []);
   const { nodes, materials } = useGLTF("/School.glb");
   return (
     <group ref={group} {...props} dispose={null}>

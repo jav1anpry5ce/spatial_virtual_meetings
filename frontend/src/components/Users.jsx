@@ -41,8 +41,10 @@ export default function Users({
   microphone,
   mute,
   image,
+  schoolRef,
 }) {
   const [audioData, setAudioData] = useState();
+  const [hidden, set] = useState(false);
   const [ref, api] = useSphere(() => ({
     mass: 10,
     type: "Static",
@@ -63,10 +65,16 @@ export default function Users({
         <Html
           as="div"
           prepend={true}
-          distanceFactor={12}
+          distanceFactor={15}
           position={[0, -0.31, 0]}
           center
-          className="flex flex-col space-y-2 items-center w-[16rem] h-[14rem]"
+          className="flex flex-col space-y-2 items-center w-[16rem] h-[16rem]"
+          occlude={[schoolRef]}
+          onOcclude={set}
+          style={{
+            transition: "all 0.09s",
+            opacity: hidden ? 0 : 1,
+          }}
         >
           <div className="flex items-center text-white">
             {name}
@@ -86,7 +94,7 @@ export default function Users({
           <img
             src={image}
             alt="pic"
-            className="w-[6rem] h-[6rem] aspect-square rounded-full object-cover object-center"
+            className="w-[6.5rem] h-[6.5rem] aspect-square rounded-full object-cover object-center"
           />
         </Html>
       </Sphere>
