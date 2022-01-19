@@ -86,13 +86,12 @@ export default function World({
       });
     }
     return () => {
-      if (socket) {
-        socket.off("userPositions");
-        socket.off("send");
-        socket.off("userDisconnected");
-        socket.off("newUserConnected");
-        socket.off("welcome");
-      }
+      setUsers([]);
+      socket.off("welcome");
+      socket.off("newUserConnected");
+      socket.off("userDisconnected");
+      socket.off("userPositions");
+      socket.off("send");
     };
     // eslint-disable-next-line
   }, [socket]);
@@ -183,11 +182,11 @@ export default function World({
             <School />
             <Bar />
             <Dance />
-            {users.map((user) => {
+            {users.map((user, index) => {
               if (user.id !== userId) {
                 return (
                   <Users
-                    key={user.id}
+                    key={index}
                     position={user.position}
                     rotation={user.rotation}
                     colour={user.colour}

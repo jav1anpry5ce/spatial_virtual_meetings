@@ -12,6 +12,7 @@ const socket = io("https://javaughnpryce.live:6060", {
   timeout: 3600000,
 });
 
+
 export default function App() {
   const [mute, setMute] = useState(false);
   const [microphone, setMicrophone] = useState(false);
@@ -129,11 +130,11 @@ export default function App() {
 
   useEffect(() => {
     if (socket) {
-      socket.on("newUserConnected", (user) => {
-        notify(user.user.name, "has entered the space!");
+      socket.on("newUserConnected", ({ user: { name } }) => {
+        notify(name, "has entered the space!");
       });
-      socket.on("userDisconnected", (user) => {
-        notify(user.name, "has left the space!");
+      socket.on("userDisconnected", ({ name }) => {
+        notify(name, "has left the space!");
       });
       socket.on("usersConnected", (data) => {
         setUsersConnected(data.connected);
@@ -143,16 +144,18 @@ export default function App() {
       });
       socket.io.on("reconnect_attempt", () => {
         setReconnecting(true);
-        socket.disconnect();
         setUsersConnected(0);
       });
     }
+    // hey
+
     return () => {
       if (socket) {
         socket.off("newUserConnected");
         socket.off("userDisconnected");
         socket.off("usersConnected");
         socket.off("megaphone");
+        socket.disconnect();
       }
     };
     // eslint-disable-next-line
@@ -170,7 +173,7 @@ export default function App() {
     });
 
   if (name && userColour && imageUrl && !mobile) {
-    socket.connect();
+    if (socket.disconnected) socket.connect();
     return (
       <div className="flex flex-col justify-between min-h-screen h-screen bg-zinc-900 py-1">
         <div className="bg-gray-900 flex-1 w-full">
