@@ -191,7 +191,6 @@ export default function World({
                     key={index}
                     position={user.position}
                     rotation={user.rotation}
-                    colour={user.colour}
                     audio={
                       usersVoice && usersVoice.id === user.id && usersVoice.data
                     }

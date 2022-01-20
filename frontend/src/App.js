@@ -19,7 +19,6 @@ export default function App() {
   const [voiceData, setVoiceData] = useState();
   const [name, setName] = useState(localStorage.getItem("name"));
   const [imageUrl, setImageUrl] = useState(localStorage.getItem("imageUrl"));
-  const [userColour, setUserColour] = useState(localStorage.getItem("colour"));
   const [mobile, setMobile] = useState(false);
   const [isAddressAll, setIsAddressAll] = useState(false);
   const [reconnecting, setReconnecting] = useState(false);
@@ -98,12 +97,11 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!mobile && name && imageUrl && userColour) {
+    if (!mobile && name && imageUrl) {
       const data = {
         mute,
         name,
         imageUrl,
-        userColour,
         microphone,
       };
 
@@ -115,7 +113,7 @@ export default function App() {
       }
     }
     // eslint-disable-next-line
-  }, [mobile, name, imageUrl, userColour]);
+  }, [mobile, name, imageUrl]);
 
   useEffect(() => {
     const data = {
@@ -173,7 +171,7 @@ export default function App() {
       progress: undefined,
     });
 
-  if (name && userColour && imageUrl && !mobile) {
+  if (name && imageUrl && !mobile) {
     if (socket.disconnected) socket.connect();
     return (
       <div className="flex flex-col justify-between min-h-screen h-screen bg-zinc-900 py-1">
@@ -275,12 +273,5 @@ export default function App() {
         <MobileScreen />
       </div>
     );
-  } else
-    return (
-      <NameForm
-        setName={setName}
-        setUserColour={setUserColour}
-        setImageUrl={setImageUrl}
-      />
-    );
+  } else return <NameForm setName={setName} setImageUrl={setImageUrl} />;
 }

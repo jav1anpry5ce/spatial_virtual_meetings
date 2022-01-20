@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, Suspense } from "react";
 import * as THREE from "three";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { Html, Sphere } from "@react-three/drei";
+import { Html } from "@react-three/drei";
 import { useSphere } from "@react-three/cannon";
 import { BsMicMute, BsMic } from "react-icons/bs";
 import { GiSpeakerOff, GiSpeaker } from "react-icons/gi";
@@ -35,7 +35,7 @@ function Sound({ audio }) {
 export default function Users({
   position,
   rotation,
-  colour,
+
   audio,
   name,
   microphone,
@@ -49,7 +49,7 @@ export default function Users({
     mass: 10,
     type: "Static",
     args: [0, 0, 0],
-    scale: [0.4, 0.4, 0.4],
+    scale: [0, 0, 0],
   }));
   useFrame(() => {
     api.position.set(position.x, position.y, position.z);
@@ -59,45 +59,42 @@ export default function Users({
     setAudioData(audio);
   }, [audio]);
   return (
-    <mesh ref={ref} scale={[0.4, 0.4, 0.4]}>
-      <Sphere>
-        <meshBasicMaterial attach="material" color={colour} />
-        <Html
-          as="div"
-          prepend={true}
-          distanceFactor={15}
-          position={[0, -0.31, 0]}
-          center
-          className="flex flex-col space-y-2 items-center w-[16rem] h-[16rem]"
-          occlude={[schoolRef]}
-          onOcclude={set}
-          style={{
-            transition: "all 0.09s",
-            opacity: hidden ? 0 : 1,
-          }}
-        >
-          <div className="flex items-center text-white">
-            {name}
-            <div>
-              {microphone ? (
-                <BsMic className="text-base text-white" />
-              ) : (
-                <BsMicMute className="text-base text-white" />
-              )}
-              {mute ? (
-                <GiSpeakerOff className="text-base text-white" />
-              ) : (
-                <GiSpeaker className="text-base text-white" />
-              )}
-            </div>
+    <mesh ref={ref} scale={[0, 0, 0]}>
+      <Html
+        as="div"
+        prepend={true}
+        distanceFactor={7}
+        position={[0, -0.31, 0]}
+        center
+        className="flex flex-col space-y-2 items-center w-[16rem] h-[16rem]"
+        occlude={[schoolRef]}
+        onOcclude={set}
+        style={{
+          transition: "all 0.09s",
+          opacity: hidden ? 0 : 1,
+        }}
+      >
+        <div className="flex items-center text-white">
+          {name}
+          <div>
+            {microphone ? (
+              <BsMic className="text-base text-white" />
+            ) : (
+              <BsMicMute className="text-base text-white" />
+            )}
+            {mute ? (
+              <GiSpeakerOff className="text-base text-white" />
+            ) : (
+              <GiSpeaker className="text-base text-white" />
+            )}
           </div>
-          <img
-            src={image}
-            alt="pic"
-            className="w-[6.5rem] h-[6.5rem] aspect-square rounded-full object-cover object-center"
-          />
-        </Html>
-      </Sphere>
+        </div>
+        <img
+          src={image}
+          alt="pic"
+          className="w-[6.5rem] h-[6.5rem] aspect-square rounded-full object-cover object-center"
+        />
+      </Html>
       <Suspense fallback={null}>
         <Sound audio={audioData} />
       </Suspense>
