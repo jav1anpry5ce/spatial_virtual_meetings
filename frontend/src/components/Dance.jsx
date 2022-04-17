@@ -7,7 +7,7 @@ export default function Model() {
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
     actions.rock.play();
-  });
+  }, []);
   return (
     <group ref={group} dispose={null}>
       <group

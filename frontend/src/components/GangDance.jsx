@@ -7,7 +7,7 @@ export default function Model(props) {
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
     actions.gang.play();
-  });
+  }, []);
   return (
     <group ref={group} {...props} dispose={null}>
       <group

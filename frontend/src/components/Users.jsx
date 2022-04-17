@@ -35,7 +35,6 @@ function Sound({ audio }) {
 export default function Users({
   position,
   rotation,
-
   audio,
   name,
   microphone,
