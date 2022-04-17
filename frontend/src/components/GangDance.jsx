@@ -7,6 +7,7 @@ export default function Model(props) {
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
     actions.gang.play();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <group ref={group} {...props} dispose={null}>
