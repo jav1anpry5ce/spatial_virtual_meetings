@@ -1,4 +1,4 @@
-const { createServer } = require("https");
+const { createServer } = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
 const fs = require("fs");
@@ -6,13 +6,13 @@ require("dotenv").config();
 require("cors");
 const { instrument } = require("@socket.io/admin-ui");
 
-const server = createServer({
-  key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
-});
+// const server = createServer({
+//   key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+//   cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+// });
 
-// const server = createServer();
-const socketsStatus = [];
+const server = createServer();
+const usersConnected = [];
 const firstClient = {
   id: null,
   currentTime: 0,
@@ -29,16 +29,16 @@ io.on("connection", (socket) => {
   console.log(
     `Connection from ${socket.request.socket._peername.address}:${socket.request.socket._peername.port}`
   );
-  io.emit("usersConnected", { connected: socketsStatus.length });
+  io.emit("usersConnected", { connected: usersConnected.length });
   const socketId = socket.id;
 
-  if (socketsStatus.length === 0) {
+  if (usersConnected.length === 0) {
     firstClient.id = socketId;
   }
 
   socket.emit("welcome", {
     id: socketId,
-    users: socketsStatus,
+    users: usersConnected,
     currentTime: firstClient.currentTime,
   });
 
@@ -57,24 +57,24 @@ io.on("connection", (socket) => {
       colour: data.userColour,
       image: data.imageUrl,
     };
-    socketsStatus.push(user);
+    usersConnected.push(user);
     socket.broadcast.emit("newUserConnected", {
       user: user,
     });
-    io.emit("usersConnected", { connected: socketsStatus.length });
+    io.emit("usersConnected", { connected: usersConnected.length });
   });
 
   socket.on("userDataUpdated", (data) => {
-    const user = socketsStatus.find((user) => user.id === socketId);
+    const user = usersConnected.find((user) => user.id === socketId);
     if (user) {
       user.mute = data.mute;
       user.microphone = data.microphone;
-      socket.broadcast.emit("userPositions", socketsStatus);
+      socket.broadcast.emit("userPositions", usersConnected);
     }
   });
 
   socket.on("move", (data) => {
-    const user = socketsStatus.find((user) => user.id === socketId);
+    const user = usersConnected.find((user) => user.id === socketId);
     if (user) {
       if (
         user.position.x !== data.position.x ||
@@ -82,7 +82,7 @@ io.on("connection", (socket) => {
         user.position.z !== data.position.z
       ) {
         user.position = data.position;
-        socket.broadcast.emit("userPositions", socketsStatus);
+        socket.broadcast.emit("userPositions", usersConnected);
       }
     }
 
@@ -106,7 +106,7 @@ io.on("connection", (socket) => {
     let newData = userVoice.data.split(";");
     newData[0] = "data:audio/ogg;";
     newData = newData[0] + newData[1];
-    socketsStatus.map((user) => {
+    usersConnected.map((user) => {
       if (!user.mute && user.id != socketId) {
         socket.to(user.id).emit("send", {
           id: userVoice.id,
@@ -122,19 +122,20 @@ io.on("connection", (socket) => {
       `${socket.request.socket._peername.address}:${socket.request.socket._peername.port} Disconnected`
     );
     if (socketId === firstClient.id) {
-      if (socketsStatus.length > 0) firstClient.id = socketsStatus[0].id;
+      const newClient = usersConnected.slice(-1);
+      if (usersConnected.length > 0) firstClient.id = newClient[0].id;
     }
-    if (socketsStatus.length < 1) {
+    if (usersConnected.length < 1) {
       firstClient.id = null;
       firstClient.currentTime = 0;
     }
-    const user = socketsStatus.find((user) => user.id === socketId);
+    const user = usersConnected.find((user) => user.id === socketId);
     if (user) {
       socket.broadcast.emit("userDisconnected", user);
-      const index = socketsStatus.findIndex((user) => user.id === socketId);
-      if (index !== -1) socketsStatus.splice(index, 1)[0];
+      const index = usersConnected.findIndex((user) => user.id === socketId);
+      if (index !== -1) usersConnected.splice(index, 1)[0];
     }
-    io.emit("usersConnected", { connected: socketsStatus.length });
+    io.emit("usersConnected", { connected: usersConnected.length });
   });
 });
 
