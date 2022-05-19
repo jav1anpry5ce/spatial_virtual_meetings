@@ -6,7 +6,7 @@ import { World, NameForm, MobileScreen } from "./components";
 import { ToastContainer, toast } from "react-toastify";
 import { SpinnerDotted } from "spinners-react";
 
-const socket = io("https://javaughnpryce.live:6060", {
+const socket = io("https://backend.javaughnpryce.live:5000", {
   autoConnect: false,
   reconnection: true,
   timeout: 3600000,
